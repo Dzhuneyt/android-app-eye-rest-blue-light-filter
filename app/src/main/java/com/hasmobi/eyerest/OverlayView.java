@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 class OverlayView extends ImageView {
 	private Paint mLoadPaint;
@@ -49,7 +48,9 @@ class OverlayView extends ImageView {
 	}
 
 	public void setColor(int color) {
-		Log.d(getClass().getSimpleName(), "Changing color to " + color);
+		if (this.color != color) {
+			Log.d(getClass().getSimpleName(), "Changing color to " + Integer.toHexString(color));
+		}
 		mLoadPaint.setColor(color);
 
 		setOpacityPercent(getOpacityPercent());

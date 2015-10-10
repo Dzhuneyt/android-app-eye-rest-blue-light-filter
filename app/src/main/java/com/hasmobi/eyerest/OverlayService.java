@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 
+import java.util.Calendar;
+
 public class OverlayService extends Service {
 	OverlayView mView;
 
@@ -25,9 +27,52 @@ public class OverlayService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(getClass().getSimpleName(), "onStartCommand");
 
-		SharedPreferences sp = getSharedPreferences("settings", MODE_PRIVATE);
-		int opacityPercent = sp.getInt("opacity_percent", 20);
-		int color = sp.getInt("overlay_color", Color.BLACK);
+		final SharedPreferences sp = Prefs.get(getBaseContext());
+
+		if (!sp.getBoolean(Constants.PREF_EYEREST_ENABLED, false)) {
+			Log.e(getClass().toString(), "OverlayService enabled but the screen dim is disabled. Shutting down service...");
+			stopSelf();
+			return START_NOT_STICKY;
+		}
+
+		if (sp.getBoolean(Constants.PREF_SCHEDULER_ENABLED, false)) {
+			Log.d(getClass().toString(), "Probably called by scheduler");
+			long now = Calendar.getInstance().getTimeInMillis();
+
+			final int scheduleFromHour = sp.getInt("scheduleFromHour", 20);
+			final int scheduleFromMinute = sp.getInt("scheduleFromMinute", 0);
+
+			final int scheduleToHour = sp.getInt("scheduleToHour", 6);
+			final int scheduleToMinute = sp.getInt("scheduleToMinute", 0);
+
+			Calendar cBegin = Calendar.getInstance();
+			cBegin.set(Calendar.HOUR_OF_DAY, scheduleFromHour);
+			cBegin.set(Calendar.MINUTE, scheduleFromMinute);
+			cBegin.clear(Calendar.SECOND);
+
+			Calendar cEnd = Calendar.getInstance();
+			cEnd.set(Calendar.HOUR_OF_DAY, scheduleToHour);
+			cEnd.set(Calendar.MINUTE, scheduleToMinute);
+			cEnd.clear(Calendar.SECOND);
+
+			if (cBegin.getTimeInMillis() > now) {
+				Log.d(getClass().toString(), "The scheduler will darken the screen at " + cBegin.getTime());
+				stopSelf();
+				return START_NOT_STICKY;
+			} else {
+				Log.d(getClass().toString(), "Screen was dimmed this many seconds ago:" + (cBegin.getTimeInMillis() - now) / 1000);
+			}
+			if (cEnd.getTimeInMillis() < now) {
+				Log.d(getClass().toString(), "The scheduler already ended the screen darkening session this many seconds ago " + (cEnd.getTimeInMillis() - now) / 1000);
+				stopSelf();
+				return START_NOT_STICKY;
+			} else {
+				Log.d(getClass().toString(), "Remaining seconds until full brightness is restored: " + (cEnd.getTimeInMillis() - now) / 1000);
+			}
+		}
+
+		int opacityPercent = sp.getInt(Constants.PREF_DIM_LEVEL, 20);
+		int color = sp.getInt(Constants.PREF_OVERLAY_COLOR, Color.BLACK);
 
 		if (mView == null) {
 			mView = new OverlayView(this);
@@ -61,16 +106,10 @@ public class OverlayService extends Service {
 		return START_STICKY;
 	}
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		Log.d(getClass().getSimpleName(), "onCreate");
-	}
-
 	private void showNotification() {
 		NotificationCompat.Builder mBuilder =
 				new NotificationCompat.Builder(this)
-						.setSmallIcon(R.drawable.icon)
+						.setSmallIcon(R.drawable.ic_check_white_48dp)
 						.setContentTitle("Eye strain reduced")
 						.setContentText("Tap to edit settings or disable");
 

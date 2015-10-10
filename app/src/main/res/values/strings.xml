@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Eye Rest</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="enable_eye_rest">Enable eye rest</string>
 </resources>

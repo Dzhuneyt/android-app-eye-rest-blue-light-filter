@@ -1,26 +1,40 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "20.0.0"
+	compileSdkVersion 23
+	buildToolsVersion "23.0.0"
 
-    defaultConfig {
-        applicationId "com.hasmobi.eyerest"
-        minSdkVersion 11
-        targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+	defaultConfig {
+		applicationId "com.hasmobi.eyerest"
+		minSdkVersion 16
+		targetSdkVersion 23
+		versionCode 1
+		versionName "1.0"
+		multiDexEnabled true
+	}
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+	}
 }
 
+repositories {
+	maven {
+		url "https://jitpack.io"
+	}
+}
+
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.0'
-    compile 'com.google.android.gms:play-services:6.1.+'
+	compile fileTree(dir: 'libs', include: ['*.jar'])
+	testCompile 'junit:junit:4.12'
+	compile 'com.android.support:appcompat-v7:23.0.1'
+	compile 'com.android.support:design:23.0.1'
+	compile 'com.google.android.gms:play-services-analytics:8.1.0'
+	compile 'com.wdullaer:materialdatetimepicker:1.5.3'
+	compile 'org.adw.library:discrete-seekbar:1.0.0'
+	compile 'com.facebook.shimmer:shimmer:0.1.0@aar'
 }
