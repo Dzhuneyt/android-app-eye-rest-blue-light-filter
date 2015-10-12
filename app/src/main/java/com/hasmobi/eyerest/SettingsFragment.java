@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 
@@ -24,6 +25,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsFragment extends Fragment {
+
+	private boolean _oldSchedulerEnabledStatus = false;
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		SharedPreferences sp = Prefs.get(getContext());
+
+		// Temporarily override the scheduler
+		_oldSchedulerEnabledStatus = sp.getBoolean(Constants.PREF_SCHEDULER_ENABLED, false);
+		sp.edit().putBoolean(Constants.PREF_SCHEDULER_ENABLED, false).apply();
+
+		// For better preview, we better force enable
+		// the screen darkening until this fragment is visible
+		getContext().startService(new Intent(getContext(), OverlayService.class));
+		getContext().stopService(new Intent(getContext(), SchedulerService.class));
+	}
+
+	@Override
+	public void onPause() {
+		SharedPreferences sp = Prefs.get(getContext());
+
+		// Restore the scheduler to its old state
+		sp.edit().putBoolean(Constants.PREF_SCHEDULER_ENABLED, _oldSchedulerEnabledStatus).apply();
+
+		if (sp.getBoolean(Constants.PREF_SCHEDULER_ENABLED, false)) {
+			getContext().startService(new Intent(getContext(), SchedulerService.class));
+		} else {
+			if (!sp.getBoolean(Constants.PREF_EYEREST_ENABLED, false)) {
+				getContext().stopService(new Intent(getContext(), OverlayService.class));
+			}
+		}
+		super.onPause();
+	}
 
 	@Nullable
 	@Override
@@ -105,6 +141,19 @@ public class SettingsFragment extends Fragment {
 			@Override
 			public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
 
+			}
+		});
+
+		Button bSchedule = (Button) root.findViewById(R.id.bSchedule);
+		if (sp.getBoolean(Constants.PREF_SCHEDULER_ENABLED, false)) {
+			bSchedule.setVisibility(View.VISIBLE);
+		} else {
+			bSchedule.setVisibility(View.GONE);
+		}
+		bSchedule.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.main, new ScheduleFragment()).addToBackStack(null).commit();
 			}
 		});
 	}

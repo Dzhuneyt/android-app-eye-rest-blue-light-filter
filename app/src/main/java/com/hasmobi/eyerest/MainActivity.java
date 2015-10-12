@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity
 		} else {
 			if (sp.getBoolean(Constants.PREF_EYEREST_ENABLED, false)) {
 				startService(new Intent(getBaseContext(), OverlayService.class));
+			} else {
+				stopService(new Intent(getBaseContext(), OverlayService.class));
 			}
 		}
 
@@ -120,6 +122,9 @@ public class MainActivity extends AppCompatActivity
 		int id = item.getItemId();
 
 		FragmentManager fm = getSupportFragmentManager();
+
+		// Clear the backstack, so pressing the back button exits the app
+		fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
 		if (id == R.id.nav_personalize) {
 			// Handle the camera action

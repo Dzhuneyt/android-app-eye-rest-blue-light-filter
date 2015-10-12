@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,11 +118,19 @@ public class ScheduleFragment extends Fragment {
 		bTo.setText(String.format("%02d:%02d", scheduleToHour, scheduleToMinute));
 
 		if (isSchedulerEnabled) {
+			Log.d(getContext().toString(), "Scheduler enabled. Starting service");
 			ll.setVisibility(View.VISIBLE);
 			getContext().startService(new Intent(getContext(), SchedulerService.class));
 		} else {
+			Log.d(getContext().toString(), "Scheduler disabled");
 			ll.setVisibility(View.INVISIBLE);
 			getContext().stopService(new Intent(getContext(), SchedulerService.class));
+
+			if (!sp.getBoolean(Constants.PREF_EYEREST_ENABLED, false)) {
+				getContext().stopService(new Intent(getContext(), OverlayService.class));
+			} else {
+				getContext().startService(new Intent(getContext(), OverlayService.class));
+			}
 		}
 	}
 }

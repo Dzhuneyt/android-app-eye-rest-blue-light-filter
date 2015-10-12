@@ -46,32 +46,12 @@
         app:dsb_max="100"
         app:dsb_min="0"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/bSchedule"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="#FFEBEE"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="To see the effect of these settings in real time, please do the following actions:"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enable Eye Rest"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Disable scheduler"/>
-    </LinearLayout>
-
+        android:drawableLeft="@drawable/ic_history_black_48dp"
+        android:text="Schedule hours"
+        android:visibility="gone"/>
 
 </LinearLayout>
