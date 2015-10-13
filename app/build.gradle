@@ -25,6 +25,7 @@ repositories {
 	maven {
 		url "https://jitpack.io"
 	}
+	jcenter()
 }
 
 
@@ -36,5 +37,5 @@ dependencies {
 	compile 'com.google.android.gms:play-services-analytics:8.1.0'
 	compile 'com.wdullaer:materialdatetimepicker:1.5.3'
 	compile 'org.adw.library:discrete-seekbar:1.0.0'
-	compile 'com.facebook.shimmer:shimmer:0.1.0@aar'
+	compile 'com.intuit.sdp:sdp-android:1.0.2'
 }

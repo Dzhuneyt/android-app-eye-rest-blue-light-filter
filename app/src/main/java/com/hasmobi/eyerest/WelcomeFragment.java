@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.facebook.shimmer.ShimmerFrameLayout;
-
 public class WelcomeFragment extends Fragment {
 
 	@Nullable
@@ -24,14 +22,14 @@ public class WelcomeFragment extends Fragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
+/*
 		ShimmerFrameLayout container =
 				(ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
 		container.setDuration(2000);
 		//container.setIntensity(0.8f);
 		container.setBaseAlpha(0.6f);
 		container.startShimmerAnimation();
-
+*/
 		Button bEnable = (Button) view.findViewById(R.id.bEnable);
 		bEnable.setOnClickListener(new View.OnClickListener() {
 			@Override

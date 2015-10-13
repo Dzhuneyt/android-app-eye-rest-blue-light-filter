@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -80,7 +81,7 @@ public class SettingsFragment extends Fragment {
 		SharedPreferences sp = Prefs.get(getContext());
 
 		int opacityPercent = sp.getInt(Constants.PREF_DIM_LEVEL, 20);
-		int currentColor = sp.getInt("overlay_color", Color.BLACK);
+		final int currentColor = sp.getInt("overlay_color", Color.BLACK);
 
 		Log.d(getClass().toString(), "Restoring darkening intensity to " + opacityPercent + " from preferences");
 		sb.setProgress(opacityPercent);
@@ -118,42 +119,50 @@ public class SettingsFragment extends Fragment {
 		});
 
 		sb.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+
+			SharedPreferences sp = Prefs.get(getContext());
+			int currentProgress = 0;
+			final Handler h = new Handler();
+			final Runnable r = new Runnable() {
+
+				@Override
+				public void run() {
+					sp.edit().putInt(Constants.PREF_DIM_LEVEL, currentProgress).apply();
+
+					if (sp.getBoolean(Constants.PREF_SCHEDULER_ENABLED, false)) {
+						getActivity().getBaseContext().startService(new Intent(getActivity().getBaseContext(), SchedulerService.class));
+					} else {
+						getActivity().getBaseContext().startService(new Intent(getActivity().getBaseContext(), OverlayService.class));
+					}
+				}
+			};
+
 			@Override
 			public void onProgressChanged(DiscreteSeekBar seekBar, int intensityPercent, boolean fromUser) {
 				if (!fromUser) return;
 
-				SharedPreferences sp = Prefs.get(seekBar.getContext());
+				Log.d(getClass().toString(), "onProgressChanged");
 
-				sp.edit().putInt(Constants.PREF_DIM_LEVEL, intensityPercent).apply();
+				currentProgress = intensityPercent;
 
-				if (sp.getBoolean(Constants.PREF_SCHEDULER_ENABLED, false)) {
-					getActivity().getBaseContext().startService(new Intent(getActivity().getBaseContext(), SchedulerService.class));
-				} else {
-					getActivity().getBaseContext().startService(new Intent(getActivity().getBaseContext(), OverlayService.class));
-				}
+				h.removeCallbacks(r);
+				h.postDelayed(r, 300);
 			}
 
 			@Override
 			public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
-
 			}
 
 			@Override
 			public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-
 			}
 		});
 
-		Button bSchedule = (Button) root.findViewById(R.id.bSchedule);
-		if (sp.getBoolean(Constants.PREF_SCHEDULER_ENABLED, false)) {
-			bSchedule.setVisibility(View.VISIBLE);
-		} else {
-			bSchedule.setVisibility(View.GONE);
-		}
+		final Button bSchedule = (Button) root.findViewById(R.id.bSchedule);
 		bSchedule.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.main, new ScheduleFragment()).addToBackStack(null).commit();
+				getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main, new ScheduleFragment()).addToBackStack(null).commit();
 			}
 		});
 	}
@@ -166,11 +175,12 @@ public class SettingsFragment extends Fragment {
 		public OverlayColor(String label, String hex) {
 			this.label = label;
 			this.hex = hex;
+			Log.d(getClass().toString(), hex);
 			this.color = Color.parseColor(hex);
 		}
 	}
 
-	static class ColorsAdapter extends BaseAdapter {
+	static private class ColorsAdapter extends BaseAdapter {
 
 		private Context mContext;
 
@@ -181,12 +191,12 @@ public class SettingsFragment extends Fragment {
 		public ColorsAdapter(Context c) {
 			mContext = c;
 
-			overlayColors.add(new OverlayColor("Black", "black"));
-			overlayColors.add(new OverlayColor("Brown", "#49311c"));
-			overlayColors.add(new OverlayColor("navy", "navy"));
-			overlayColors.add(new OverlayColor("Red", "#c70202"));
-			overlayColors.add(new OverlayColor("Green", "#019504"));
-			overlayColors.add(new OverlayColor("Cyan", "cyan"));
+			overlayColors.add(new OverlayColor("Black", "#000000"));
+			overlayColors.add(new OverlayColor("Brown", "#3E2723"));
+			overlayColors.add(new OverlayColor("Indigo", "#3949AB"));
+			overlayColors.add(new OverlayColor("Blue", "#0D47A1"));
+			overlayColors.add(new OverlayColor("Red", "#B71C1C"));
+			overlayColors.add(new OverlayColor("Teal", "#004D40"));
 			// Color picker: https://github.com/yukuku/ambilwarna
 		}
 
@@ -218,8 +228,8 @@ public class SettingsFragment extends Fragment {
 				imageView = (SquareImageView) convertView;
 			}
 
-			OverlayColor overlayColor = getItem(position);
-			int color = android.graphics.Color.parseColor(overlayColor.hex);
+			final OverlayColor overlayColor = getItem(position);
+			final int color = android.graphics.Color.parseColor(overlayColor.hex);
 
 			// Show or hide the overlaying "check" icon over
 			// the specific color that was selected
