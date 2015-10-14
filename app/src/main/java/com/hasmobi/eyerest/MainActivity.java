@@ -1,8 +1,12 @@
 package com.hasmobi.eyerest;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -10,18 +14,62 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.android.vending.billing.IInAppBillingService;
+import com.hasmobi.eyerest.billingutil.IabHelper;
+import com.hasmobi.eyerest.billingutil.IabResult;
+
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener {
+
+	// Google In-App Billing related:
+	public IInAppBillingService mBillingService;
+	IabHelper iabHelper;
+
+	private String TAG = getClass().toString();
+
+	private ServiceConnection _mServiceConn = new ServiceConnection() {
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			mBillingService = null;
+		}
+
+		@Override
+		public void onServiceConnected(ComponentName name,
+		                               IBinder service) {
+			mBillingService = IInAppBillingService.Stub.asInterface(service);
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// Google In-App Billing related:
+		Intent iBilling = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+		iBilling.setPackage("com.android.vending");
+		//bindService(iBilling, _mServiceConn, Context.BIND_AUTO_CREATE);
+
+		final String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmDE8PlnfNAzau5GPe/EAjl0yJnK0DisSeqtvvohrQROtoHXtaFXSXsmyzIfHrfkbt3V2GhJVG3mNwUy7HJ6qUzvU9C2TPb1Rkhhu/86FmaxUTGT6pgF1d3rekM1Urw7FNwjlh4VVdDhqI2myoJfQBwHvEFyLIgZP5ij2xCidqP36ZoGTaQkYI8nVDTm76tdRkFF5uS0UUooHkbdK1AfhvVr3rpZK/JdWMKAS5AmT0PgPC1nDa41XzcUfQEAt+2GVdYXUJ/WifE/PgGiHsOcPsaYKsB711t0SVGhLbn71cwUIc/KhbjdpRizkgzGoTwboO7Jh9U6oUOnQkxrmg8qW6QIDAQAB";
+
+		// compute your public key and store it in base64EncodedPublicKey
+		iabHelper = new IabHelper(getBaseContext(), base64EncodedPublicKey);
+		iabHelper.enableDebugLogging(true, TAG);
+		iabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+			public void onIabSetupFinished(IabResult result) {
+				if (!result.isSuccess()) {
+					// Oh noes, there was a problem.
+					Log.d(TAG, "Problem setting up In-app Billing: " + result);
+				}
+				// Hooray, IAB is fully set up!
+			}
+		});
 
 		final SharedPreferences sp = Prefs.get(getBaseContext());
 
@@ -91,6 +139,17 @@ public class MainActivity extends AppCompatActivity
 		} else {
 			super.onBackPressed();
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (mBillingService != null) {
+			//unbindService(_mServiceConn);
+		}
+
+		if (iabHelper != null) iabHelper.dispose();
+		iabHelper = null;
 	}
 
 	@Override

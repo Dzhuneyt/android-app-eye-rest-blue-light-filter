@@ -175,7 +175,6 @@ public class SettingsFragment extends Fragment {
 		public OverlayColor(String label, String hex) {
 			this.label = label;
 			this.hex = hex;
-			Log.d(getClass().toString(), hex);
 			this.color = Color.parseColor(hex);
 		}
 	}
