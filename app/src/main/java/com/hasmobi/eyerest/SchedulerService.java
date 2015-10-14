@@ -29,7 +29,7 @@ public class SchedulerService extends Service {
 		// darkening service depending on which hour of the day it is
 		Intent iEnd = new Intent(getBaseContext(), SchedulerService.class);
 		PendingIntent piEnd = PendingIntent.getService(getBaseContext(), 0, iEnd, PendingIntent.FLAG_UPDATE_CURRENT);
-		am.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), 1000 * 15, piEnd);
+		am.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), AlarmManager.INTERVAL_HALF_HOUR, piEnd);
 
 		Log.d(getClass().toString(), "Scheduler startup at " + Calendar.getInstance().getTime() + ". Will repeat.");
 	}

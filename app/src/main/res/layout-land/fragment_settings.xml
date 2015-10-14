@@ -41,8 +41,8 @@
             android:id="@+id/bSchedule"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="10dp"
             android:drawableLeft="@drawable/ic_history_black_18dp"
+            android:drawablePadding="10dp"
             android:text="Schedule hours"/>
 
 
