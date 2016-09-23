@@ -1,9 +1,10 @@
-package com.hasmobi.eyerest;
+package com.hasmobi.eyerest.base;
 
 import android.content.res.Resources;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.hasmobi.eyerest.R;
 
 public class Application extends android.app.Application {
 

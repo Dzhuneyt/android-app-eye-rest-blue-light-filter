@@ -1,1 +1,49 @@
-{"project_info":{"project_id":"eye-rest","project_number":"1049632198273","name":"Eye Rest"},"client":[{"client_info":{"mobilesdk_app_id":"1:1049632198273:android:60278d38367180ef","client_id":"android:com.hasmobi.eyerest","client_type":1,"android_client_info":{"package_name":"com.hasmobi.eyerest"}},"oauth_client":[],"api_key":[],"services":{"analytics_service":{"status":2,"analytics_property":{"tracking_id":"UA-1704294-189"}},"cloud_messaging_service":{"status":1,"apns_config":[]},"appinvite_service":{"status":1,"other_platform_oauth_client":[]},"google_signin_service":{"status":1},"ads_service":{"status":2,"test_banner_ad_unit_id":"ca-app-pub-3940256099942544/6300978111","test_interstitial_ad_unit_id":"ca-app-pub-3940256099942544/1033173712"}}}],"client_info":[],"ARTIFACT_VERSION":"1"}
+{
+  "project_info": {
+    "project_number": "1049632198273",
+    "firebase_url": "https://eye-rest.firebaseio.com",
+    "project_id": "eye-rest",
+    "storage_bucket": "eye-rest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049632198273:android:60278d38367180ef",
+        "android_client_info": {
+          "package_name": "com.hasmobi.eyerest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1049632198273-032dj7so2185spgngfrlr2j269c38tb8.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1049632198273-9msfcech04m2qlsdgqcpuo4llf24d2pi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3YMHVsBWAhymBxFvFNchBAk_Jdk2KSfk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-1704294-189"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

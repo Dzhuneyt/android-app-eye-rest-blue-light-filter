@@ -1,4 +1,4 @@
-package com.hasmobi.eyerest;
+package com.hasmobi.eyerest.base;
 
 public class Constants {
 	static public final String PREF_EYEREST_ENABLED = "filter_enabled";

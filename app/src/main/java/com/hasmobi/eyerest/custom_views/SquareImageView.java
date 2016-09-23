@@ -1,4 +1,4 @@
-package com.hasmobi.eyerest;
+package com.hasmobi.eyerest.custom_views;
 
 import android.content.Context;
 import android.util.AttributeSet;

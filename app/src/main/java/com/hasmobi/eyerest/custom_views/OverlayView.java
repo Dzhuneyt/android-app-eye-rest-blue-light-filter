@@ -1,4 +1,4 @@
-package com.hasmobi.eyerest;
+package com.hasmobi.eyerest.custom_views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ImageView;
 
-class OverlayView extends ImageView {
+public class OverlayView extends ImageView {
 	private Paint mLoadPaint;
 	private int opacityPercent = 20; // 20% opacity by default
 	private int color = Color.BLACK;

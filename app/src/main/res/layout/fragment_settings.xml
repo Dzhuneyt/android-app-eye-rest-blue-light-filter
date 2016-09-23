@@ -1,24 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/fragment_background"
-              android:gravity="center"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fragment_background"
+    android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/ic_remove_red_eye_black_48dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- The eye icon that also serves as a "switch" for turning on/off the dimmer -->
+        <ImageView
+            android:id="@+id/ivEnableDisable"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_remove_red_eye_black_48dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/ivEnableDisable"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="0dp"
+                android:text="@string/intensity" />
+
+            <com.hasmobi.eyerest.custom_views.DiscreeteSeekBar
+                android:id="@+id/sbDarkenIntensity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:dsb_max="100"
+                app:dsb_min="0" />
+        </LinearLayout>
+    </RelativeLayout>
+
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="Customize the darkening overlay color:"/>
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/customize_overlay_color" />
 
     <GridView
         android:id="@+id/gridColors"
@@ -30,28 +62,13 @@
         android:horizontalSpacing="15dp"
         android:numColumns="6"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp"/>
+        android:verticalSpacing="10dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
-        android:text="Darkening intensity:"/>
 
-    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-        android:id="@+id/sbDarkenIntensity"
+    <LinearLayout
+        android:id="@+id/llSchedulerContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dsb_max="100"
-        app:dsb_min="0"/>
-
-    <Button
-        android:id="@+id/bSchedule"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_history_black_18dp"
-        android:drawablePadding="10dp"
-        android:text="Schedule hours"/>
-
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"/>
 </LinearLayout>

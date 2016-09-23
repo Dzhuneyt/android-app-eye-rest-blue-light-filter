@@ -1,4 +1,4 @@
-package com.hasmobi.eyerest;
+package com.hasmobi.eyerest.base;
 
 import android.content.Context;
 import android.content.SharedPreferences;
