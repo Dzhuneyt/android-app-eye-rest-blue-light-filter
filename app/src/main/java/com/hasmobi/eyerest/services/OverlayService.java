@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 
+import com.hasmobi.eyerest.base.Application;
 import com.hasmobi.eyerest.base.Prefs;
 import com.hasmobi.eyerest.R;
 import com.hasmobi.eyerest.activities.MainActivity;
@@ -34,8 +35,13 @@ public class OverlayService extends Service {
 
         final SharedPreferences sp = Prefs.get(getBaseContext());
 
-        if (!sp.getBoolean(Constants.PREF_EYEREST_ENABLED, false)) {
+        if (!OverlayService.isEnabled(getBaseContext())) {
             Log.e(getClass().toString(), "OverlayService enabled but the screen dim is disabled. Shutting down service...");
+            stopSelf();
+            return START_NOT_STICKY;
+        }
+        if (!Application.canDrawOverlay(getBaseContext())) {
+            Log.e(getClass().toString(), "Permission not granted, stopping service");
             stopSelf();
             return START_NOT_STICKY;
         }

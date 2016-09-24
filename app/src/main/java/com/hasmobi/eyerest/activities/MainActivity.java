@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -18,10 +19,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.vending.billing.IInAppBillingService;
-import com.google.firebase.crash.FirebaseCrash;
 import com.hasmobi.eyerest.base.Constants;
 import com.hasmobi.eyerest.fragments.main.SchedulerDisabledFragment;
 import com.hasmobi.eyerest.helpers.IShowHideScheduler;
+import com.hasmobi.eyerest.helpers.RequestDrawOverAppsPermission;
 import com.hasmobi.eyerest.services.OverlayService;
 import com.hasmobi.eyerest.base.Prefs;
 import com.hasmobi.eyerest.R;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity
     // Google In-App Billing related:
     public IInAppBillingService mBillingService;
     IabHelper iabHelper;
+
+    private RequestDrawOverAppsPermission permissionRequester;
 
     private String TAG = getClass().toString();
 
@@ -58,6 +61,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        permissionRequester = new RequestDrawOverAppsPermission(this);
+        permissionRequester.onCreate();
 
         // Google In-App Billing related:
         Intent iBilling = new Intent("com.android.vending.billing.InAppBillingService.BIND");
@@ -139,6 +145,20 @@ public class MainActivity extends AppCompatActivity
 //
 //            cbEnable.setChecked(sp.getBoolean(Constants.PREF_EYEREST_ENABLED, false));
 //        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (permissionRequester.requestCodeMatches(requestCode)) {
+            if (permissionRequester.canDrawOverlays()) {
+                // We can now draw it
+            } else {
+                // Permission denied, exit!
+                // @TODO exit
+                permissionRequester.onCreate();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
