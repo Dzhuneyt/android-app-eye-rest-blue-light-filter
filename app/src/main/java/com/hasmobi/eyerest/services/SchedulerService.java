@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.hasmobi.eyerest.base.Application;
 import com.hasmobi.eyerest.base.Constants;
 import com.hasmobi.eyerest.base.Prefs;
 
@@ -75,8 +76,8 @@ public class SchedulerService extends Service {
         final SharedPreferences sp = Prefs.get(getBaseContext());
 
         if (sp.getBoolean(Constants.PREF_EYEREST_ENABLED, false)) {
-            Calendar cBegin = this._getCalendarForStart();
-            Calendar cEnd = this._getCalendarForEnd();
+            final Calendar cBegin = _getCalendarForStart(getBaseContext());
+            final Calendar cEnd = _getCalendarForEnd(getBaseContext());
 
             Log.d(getClass().toString(), "Screen darkens between " + cBegin.getTime() + " and " + cEnd.getTime());
             Log.d(getClass().toString(), "Now is " + Calendar.getInstance().getTime());
@@ -107,8 +108,8 @@ public class SchedulerService extends Service {
         super.onDestroy();
     }
 
-    private Calendar _getCalendarForStart() {
-        final SharedPreferences sp = Prefs.get(getBaseContext());
+    public static Calendar _getCalendarForStart(Context context) {
+        final SharedPreferences sp = Prefs.get(context);
 
         final int scheduleFromHour = sp.getInt("scheduleFromHour", 20);
         final int scheduleFromMinute = sp.getInt("scheduleFromMinute", 0);
@@ -120,8 +121,8 @@ public class SchedulerService extends Service {
         return c;
     }
 
-    private Calendar _getCalendarForEnd() {
-        final SharedPreferences sp = Prefs.get(getBaseContext());
+    public static Calendar _getCalendarForEnd(Context context) {
+        final SharedPreferences sp = Prefs.get(context);
 
         final int hour = sp.getInt("scheduleToHour", 6);
         final int minute = sp.getInt("scheduleToMinute", 0);
@@ -133,7 +134,7 @@ public class SchedulerService extends Service {
 
         // Roll over +1 day to accommodate cases where the screen dimmer restore
         // happens on the next morning
-        if (c.getTimeInMillis() < _getCalendarForStart().getTimeInMillis()) {
+        if (c.getTimeInMillis() < _getCalendarForStart(context).getTimeInMillis()) {
             c.add(Calendar.DATE, 1);
         }
         return c;
@@ -157,13 +158,13 @@ public class SchedulerService extends Service {
 
         boolean wasEnabledNow = true;
 
-        context.stopService(new Intent(context, OverlayService.class));
         if (prefs.getBoolean(Constants.PREF_SCHEDULER_ENABLED, false)) {
             wasEnabledNow = false;
         } else {
-            prefs.edit().putBoolean(Constants.PREF_SCHEDULER_ENABLED, true).apply();
+            prefs.edit().putBoolean(Constants.PREF_SCHEDULER_ENABLED, true).commit();
         }
-        context.startService(new Intent(context, OverlayService.class));
+
+        Application.refreshServices(context);
 
         return wasEnabledNow;
     }
@@ -173,12 +174,13 @@ public class SchedulerService extends Service {
 
         boolean wasDisabledNow = true;
 
-        context.stopService(new Intent(context, OverlayService.class));
         if (!prefs.getBoolean(Constants.PREF_SCHEDULER_ENABLED, false)) {
             wasDisabledNow = false;
         } else {
-            prefs.edit().putBoolean(Constants.PREF_SCHEDULER_ENABLED, false).apply();
+            prefs.edit().putBoolean(Constants.PREF_SCHEDULER_ENABLED, false).commit();
         }
+
+        Application.refreshServices(context);
 
         return wasDisabledNow;
     }

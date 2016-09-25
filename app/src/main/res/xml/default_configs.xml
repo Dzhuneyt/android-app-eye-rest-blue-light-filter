@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Default values, in case the Firebase Config backend is not reachable -->
+<defaultsMap>
+    <entry>
+        <key>after_enable_message</key>
+        <value>Done! It was that easy.</value>
+    </entry>
+</defaultsMap>

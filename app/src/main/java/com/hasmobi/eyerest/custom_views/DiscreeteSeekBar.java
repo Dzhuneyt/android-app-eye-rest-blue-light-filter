@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.hasmobi.eyerest.base.Application;
 import com.hasmobi.eyerest.services.SchedulerService;
 import com.hasmobi.eyerest.base.Constants;
 import com.hasmobi.eyerest.base.Prefs;
@@ -21,19 +23,25 @@ public class DiscreeteSeekBar extends DiscreteSeekBar {
         this.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
 
             final SharedPreferences sp = Prefs.get(getContext());
+            final Context context = getContext();
             int currentProgress = 0;
             final Handler h = new Handler();
             final Runnable r = new Runnable() {
 
                 @Override
                 public void run() {
-                    sp.edit().putInt(Constants.PREF_DIM_LEVEL, currentProgress).apply();
-
-                    if (sp.getBoolean(Constants.PREF_SCHEDULER_ENABLED, false)) {
-                        getContext().startService(new Intent(getContext(), SchedulerService.class));
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putInt(Constants.PREF_DIM_LEVEL, currentProgress);
+                    if (currentProgress > 0) {
+                        // Enable eye rest feature if slider is above zero
+                        editor.putBoolean(Constants.PREF_EYEREST_ENABLED, true);
                     } else {
-                        getContext().startService(new Intent(getContext(), OverlayService.class));
+                        // Disable eye rest feature if slider is at zero
+                        editor.putBoolean(Constants.PREF_EYEREST_ENABLED, false);
                     }
+                    editor.apply();
+
+                    Application.refreshServices(context);
                 }
             };
 

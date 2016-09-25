@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.hasmobi.eyerest.R;
+import com.hasmobi.eyerest.base.Application;
 import com.hasmobi.eyerest.base.Constants;
 import com.hasmobi.eyerest.base.Prefs;
 import com.hasmobi.eyerest.helpers.IShowHideScheduler;
+import com.hasmobi.eyerest.services.SchedulerService;
 
 public class SchedulerDisabledFragment extends Fragment {
 
@@ -27,7 +29,7 @@ public class SchedulerDisabledFragment extends Fragment {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Prefs.get(getContext()).edit().putBoolean(Constants.PREF_SCHEDULER_ENABLED, true).apply();
+                SchedulerService.enable(getContext());
                 bridge.showOrHideSchedulerUI(true);
             }
         });

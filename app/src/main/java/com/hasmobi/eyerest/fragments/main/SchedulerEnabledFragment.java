@@ -4,25 +4,38 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.hasmobi.eyerest.R;
+import com.hasmobi.eyerest.base.Application;
 import com.hasmobi.eyerest.base.Constants;
 import com.hasmobi.eyerest.base.Prefs;
 import com.hasmobi.eyerest.helpers.IShowHideScheduler;
 import com.hasmobi.eyerest.services.OverlayService;
+import com.hasmobi.eyerest.services.SchedulerService;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class SchedulerEnabledFragment extends Fragment {
 
     private IShowHideScheduler bridge;
+
+    private CountDownTimer timer;
 
     @Nullable
     @Override
@@ -49,26 +62,12 @@ public class SchedulerEnabledFragment extends Fragment {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Prefs.get(getContext()).edit().putBoolean(Constants.PREF_SCHEDULER_ENABLED, false).apply();
-
-                if (OverlayService.isEnabled(getContext())) {
-                    getContext().startService(new Intent(getContext(), OverlayService.class));
-                }
-
+                SchedulerService.disable(getContext());
                 bridge.showOrHideSchedulerUI(false);
             }
         });
 
         reloadButtonUIs();
-
-//		cbEnableScheduledDim.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//			@Override
-//			public void onCheckedChanged(CompoundButton buttonView, boolean schedulerEnable) {
-//				Prefs.get(buttonView.getContext()).edit().putBoolean(Constants.PREF_SCHEDULER_ENABLED, schedulerEnable).apply();
-//
-//				reloadButtonUIs();
-//			}
-//		});
 
         bFrom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +119,15 @@ public class SchedulerEnabledFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
     private void reloadButtonUIs() {
         if (getView() == null) return;
 
@@ -131,17 +139,61 @@ public class SchedulerEnabledFragment extends Fragment {
         final int scheduleToHour = sp.getInt("scheduleToHour", 6);
         final int scheduleToMinute = sp.getInt("scheduleToMinute", 0);
 
-        LinearLayout ll = (LinearLayout) getView().findViewById(R.id.llWrapHourPickers);
         final Button bFrom = (Button) getView().findViewById(R.id.bFrom);
         final Button bTo = (Button) getView().findViewById(R.id.bTo);
+        final TextView tvRemaining = (TextView) getView().findViewById(R.id.tvTimeRemaining);
 
-        bFrom.setText(String.format("%02d:%02d", scheduleFromHour, scheduleFromMinute));
-        bTo.setText(String.format("%02d:%02d", scheduleToHour, scheduleToMinute));
+        Calendar cNow = Calendar.getInstance();
+        Calendar cStart = SchedulerService._getCalendarForStart(getContext());
+        final Calendar cEnd = SchedulerService._getCalendarForEnd(getContext());
 
-        if (!sp.getBoolean(Constants.PREF_EYEREST_ENABLED, false)) {
-            getContext().stopService(new Intent(getContext(), OverlayService.class));
+        if (timer != null) {
+            timer.cancel();
+        }
+
+        final String time_remaining_to_darken_label = getResources().getString(R.string.time_remaining_to_darken_label);
+        final String time_remaining_to_lighten_label = getResources().getString(R.string.time_remaining_to_lighten_label);
+
+        tvRemaining.setVisibility(View.VISIBLE);
+
+        if (cNow.getTimeInMillis() > cStart.getTimeInMillis() && cNow.getTimeInMillis() < cEnd.getTimeInMillis()) {
+            // We are now in the darkening period
+            long remainingMillisToLighten = cEnd.getTimeInMillis() - cNow.getTimeInMillis();
+            timer = new CountDownTimer(remainingMillisToLighten, 1000) {
+
+                public void onTick(long millisUntilFinished) {
+                    String t = time_remaining_to_lighten_label + ": " + String.format(Locale.getDefault(), "%tT", (millisUntilFinished - TimeZone.getDefault().getRawOffset()));
+                    tvRemaining.setText(t);
+                }
+
+                public void onFinish() {
+                    reloadButtonUIs();
+                }
+            }.start();
+        } else if (cNow.getTimeInMillis() < cStart.getTimeInMillis()) {
+            // Darkening not yet started for today
+            long remainingMillisToDarken = cStart.getTimeInMillis() - cNow.getTimeInMillis();
+            timer = new CountDownTimer(remainingMillisToDarken, 1000) {
+
+                public void onTick(long millisUntilFinished) {
+                    String t = time_remaining_to_darken_label + ": " + String.format(Locale.getDefault(), "%tT", (millisUntilFinished - TimeZone.getDefault().getRawOffset()));
+                    tvRemaining.setText(t);
+                }
+
+                public void onFinish() {
+                    reloadButtonUIs();
+                }
+            }.start();
         } else {
-            getContext().startService(new Intent(getContext(), OverlayService.class));
+            // Darkening has ended for today
+            tvRemaining.setVisibility(View.GONE);
+        }
+
+        bFrom.setText(String.format(Locale.getDefault(), "%02d:%02d", scheduleFromHour, scheduleFromMinute));
+        bTo.setText(String.format(Locale.getDefault(), "%02d:%02d", scheduleToHour, scheduleToMinute));
+
+        if (getContext() != null) {
+            Application.refreshServices(getContext());
         }
     }
 }

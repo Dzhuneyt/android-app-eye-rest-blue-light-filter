@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hasmobi.eyerest.base.Application;
 import com.hasmobi.eyerest.base.Prefs;
 import com.hasmobi.eyerest.R;
@@ -85,8 +87,8 @@ public class OverlayService extends Service {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_remove_red_eye_white_24dp)
-                        .setContentTitle("Eye strain reduced")
-                        .setContentText("Tap to edit settings or disable");
+                        .setContentTitle("Screen brightness optimized")
+                        .setContentText("Tap to edit settings");
 
         mBuilder.setOngoing(true);
 
@@ -136,13 +138,22 @@ public class OverlayService extends Service {
 
         boolean wasEnabledNow = true;
 
-        context.stopService(new Intent(context, OverlayService.class));
         if (prefs.getBoolean(Constants.PREF_EYEREST_ENABLED, false)) {
             wasEnabledNow = false;
         } else {
             prefs.edit().putBoolean(Constants.PREF_EYEREST_ENABLED, true).apply();
         }
-        context.startService(new Intent(context, OverlayService.class));
+
+        Application.refreshServices(context);
+
+        if (wasEnabledNow) {
+            FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(context);
+
+            Bundle b = new Bundle();
+            b.putString(FirebaseAnalytics.Param.ITEM_ID, Constants.ANALYTICS_EVENT_OVERLAY_SERVICE);
+            b.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "enabled");
+            analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, b);
+        }
 
         return wasEnabledNow;
     }
@@ -152,11 +163,21 @@ public class OverlayService extends Service {
 
         boolean wasDisabledNow = true;
 
-        context.stopService(new Intent(context, OverlayService.class));
         if (!prefs.getBoolean(Constants.PREF_EYEREST_ENABLED, false)) {
             wasDisabledNow = false;
         } else {
             prefs.edit().putBoolean(Constants.PREF_EYEREST_ENABLED, false).apply();
+        }
+
+        Application.refreshServices(context);
+
+        if (wasDisabledNow) {
+            FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(context);
+
+            Bundle b = new Bundle();
+            b.putString(FirebaseAnalytics.Param.ITEM_ID, Constants.ANALYTICS_EVENT_OVERLAY_SERVICE);
+            b.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "disabled");
+            analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, b);
         }
 
         return wasDisabledNow;

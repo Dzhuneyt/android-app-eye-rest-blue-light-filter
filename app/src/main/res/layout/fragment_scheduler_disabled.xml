@@ -2,27 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fragment_background"
-    android:gravity="center"
     android:orientation="vertical">
+
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scheduler" />
+
+    <TextView
+        style="@style/SchedulerCaption"
+        android:text="@string/scheduler_description" />
 
     <Button
         android:id="@+id/bSchedule"
+        style="@style/Base.Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_history_black_18dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/ic_history_white_24dp"
         android:drawablePadding="10dp"
-        android:drawableStart="@drawable/ic_history_black_18dp"
+        android:drawableStart="@drawable/ic_history_white_24dp"
         android:text="Enable scheduler" />
-
-    <TextView
-        style="@style/TextAppearance.AppCompat.Body2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:text="The scheduler makes it easy to automatically darken your device's screen only at night and restore its regular brightness during the day."
-        android:textSize="14sp" />
 
 </LinearLayout>
