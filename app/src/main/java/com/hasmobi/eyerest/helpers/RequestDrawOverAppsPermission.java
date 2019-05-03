@@ -54,20 +54,19 @@ public class RequestDrawOverAppsPermission {
     }
 
     public boolean canDrawOverlays() {
-        /** if so check once again if we have permission */
         return Application.canDrawOverlay(activity.getBaseContext());
     }
 
-    public void onCreate() {
+    public void requestPermissionDrawOverOtherApps() {
         final Context context = activity.getBaseContext();
 
-        /** check if we already  have permission to draw over other apps */
+        /* check if we already have permission to draw over other apps */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(context)) {
-                /** if not construct intent to request permission */
+                /* if not construct intent to request permission */
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + context.getPackageName()));
-                /** request permission via start activity for result */
+                /* request permission via start activity for result */
 
                 activity.startActivityForResult(intent, REQUEST_CODE);
             }

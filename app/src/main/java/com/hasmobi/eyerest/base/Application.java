@@ -2,18 +2,16 @@ package com.hasmobi.eyerest.base;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.hasmobi.eyerest.R;
@@ -21,6 +19,8 @@ import com.hasmobi.eyerest.services.OverlayService;
 import com.hasmobi.eyerest.services.SchedulerService;
 
 public class Application extends android.app.Application {
+
+	public FirebaseAnalytics analytics;
 
     @Override
     public void onCreate() {
@@ -45,6 +45,8 @@ public class Application extends android.app.Application {
                         }
                     }
                 });
+
+		analytics = FirebaseAnalytics.getInstance(this);
     }
 
     static public boolean canDrawOverlay(Context context) {
@@ -75,21 +77,6 @@ public class Application extends android.app.Application {
         }
     }
 
-    private Tracker mTracker;
-
-    /**
-     * Gets the default {@link Tracker} for this {@link Application}.
-     *
-     * @return tracker
-     */
-    synchronized public Tracker getDefaultTracker() {
-        if (mTracker == null) {
-            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
-            mTracker = analytics.newTracker(R.xml.analytics);
-        }
-        return mTracker;
-    }
 
     public static int dpToPx(Context context, int dp) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();

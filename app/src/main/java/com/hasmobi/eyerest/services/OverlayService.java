@@ -1,5 +1,7 @@
 package com.hasmobi.eyerest.services;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -7,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -25,6 +28,8 @@ import com.hasmobi.eyerest.custom_views.OverlayView;
 
 public class OverlayService extends Service {
     private OverlayView mView;
+
+    private static final String NOTIFICATION_CHANNEL_ID = "overlay_service";
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -60,7 +65,9 @@ public class OverlayService extends Service {
             WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.MATCH_PARENT,
                     WindowManager.LayoutParams.MATCH_PARENT,
-                    WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
+                    (Build.VERSION.SDK_INT < Build.VERSION_CODES.O ?
+                            WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY :
+                            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY),
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
                     PixelFormat.TRANSLUCENT);
             params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
@@ -83,12 +90,30 @@ public class OverlayService extends Service {
         return START_STICKY;
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Allow putting screen overlay";
+            String description = "";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
     private void showNotification() {
+        this.createNotificationChannel();
+
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
+                new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_remove_red_eye_white_24dp)
-                        .setContentTitle("Screen brightness optimized")
-                        .setContentText("Tap to edit settings");
+                        .setContentTitle("Blue light filter active")
+                        .setContentText("Tap to edit settings or disable");
 
         mBuilder.setOngoing(true);
 
