@@ -1,30 +1,38 @@
 package com.hasmobi.eyerest.fragments.main;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.hasmobi.eyerest.R;
 import com.hasmobi.eyerest.activities.MainActivity;
+import com.hasmobi.eyerest.base.Application;
+import com.hasmobi.eyerest.custom_views.DiscreeteSeekBar;
 import com.hasmobi.eyerest.services.SchedulerService;
 import com.hasmobi.eyerest.base.Constants;
 import com.hasmobi.eyerest.base.Prefs;
 import com.hasmobi.eyerest.custom_views.SquareImageView;
 import com.hasmobi.eyerest.services.OverlayService;
+import com.thebluealliance.spectrum.SpectrumDialog;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -32,45 +40,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsFragment extends Fragment {
-
-    private boolean _oldSchedulerEnabledStatus = false;
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        SharedPreferences sp = Prefs.get(getContext());
-
-        boolean isScreenDimEnabled = sp.getBoolean(Constants.PREF_EYEREST_ENABLED, false);
-
-        // Temporarily override the scheduler, restore it back when we exit this fragment
-        _oldSchedulerEnabledStatus = sp.getBoolean(Constants.PREF_SCHEDULER_ENABLED, false);
-//        sp.edit().putBoolean(Constants.PREF_SCHEDULER_ENABLED, false).apply();
-
-//        // For better preview of how the chances will look like, we better force enable
-//        // the screen darkening until this fragment is visible
-//        getContext().startService(new Intent(getContext(), OverlayService.class));
-//
-//        // Stop the scheduler temporarily, if started
-//        getContext().stopService(new Intent(getContext(), SchedulerService.class));
-    }
-
-    @Override
-    public void onPause() {
-
-
-        // Restore the scheduler to its old state
-//        sp.edit().putBoolean(Constants.PREF_SCHEDULER_ENABLED, _oldSchedulerEnabledStatus).apply();
-//
-//        if (sp.getBoolean(Constants.PREF_SCHEDULER_ENABLED, false)) {
-//            getContext().startService(new Intent(getContext(), SchedulerService.class));
-//        } else {
-//            if (!sp.getBoolean(Constants.PREF_EYEREST_ENABLED, false)) {
-//                getContext().stopService(new Intent(getContext(), OverlayService.class));
-//            }
-//        }
-        super.onPause();
-    }
 
     @Nullable
     @Override
@@ -82,7 +51,7 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(View root, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(root, savedInstanceState);
 
-        final ImageView ivEnableDisable = (ImageView) root.findViewById(R.id.ivEnableDisable);
+        /*final ImageView ivEnableDisable = (ImageView) root.findViewById(R.id.ivEnableDisable);
 
         if (OverlayService.isEnabled(getContext())) {
             ivEnableDisable.setAlpha(1.0f);
@@ -102,10 +71,50 @@ public class SettingsFragment extends Fragment {
                     v.setAlpha(1);
                 }
             }
+        });*/
+
+        final Button bColorPicker = (Button) root.findViewById(R.id.bColorPicker);
+        bColorPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TypedArray ta = getResources().obtainTypedArray(R.array.mdcolor_500);
+                int[] colors = new int[ta.length()];
+                for (int i = 0; i < ta.length(); i++) {
+                    String hex = ta.getString(i);
+                    colors[i] = Color.parseColor(hex);
+                }
+                ta.recycle();
+
+                SharedPreferences prefs = Prefs.get(view.getContext());
+                int preselectColor = prefs.getInt(Constants.PREF_OVERLAY_COLOR, colors[0]);
+
+                DialogFragment colorPickerDialog = new SpectrumDialog.Builder(getContext())
+                        .setTitle("Select a color")
+                        .setColors(colors)
+                        .setSelectedColor(preselectColor)
+                        .setOnColorSelectedListener(new SpectrumDialog.OnColorSelectedListener() {
+                            @Override
+                            public void onColorSelected(boolean positiveResult, @ColorInt int color) {
+                                if (!positiveResult) return;
+
+                                SharedPreferences sp = Prefs.get(getContext());
+
+                                sp.edit().putInt(Constants.PREF_OVERLAY_COLOR, color).apply();
+
+                                Application.refreshServices(getContext());
+
+                                refreshUI();
+                            }
+                        })
+                        .build();
+                colorPickerDialog.show(getFragmentManager(), "color_picker");
+            }
         });
 
+        refreshUI();
+
         final GridView gridview = (GridView) root.findViewById(R.id.gridColors);
-        DiscreteSeekBar sb = (DiscreteSeekBar) root.findViewById(R.id.sbDarkenIntensity);
+        final DiscreeteSeekBar sb = (DiscreeteSeekBar) root.findViewById(R.id.sbDarkenIntensity);
 
         final ColorsAdapter adapter = new ColorsAdapter(getContext());
         gridview.setAdapter(adapter);
@@ -138,13 +147,7 @@ public class SettingsFragment extends Fragment {
 
                 sp.edit().putInt("overlay_color", selectedItem.color).apply();
 
-                if (sp.getBoolean(Constants.PREF_EYEREST_ENABLED, false)) {
-                    if (sp.getBoolean(Constants.PREF_SCHEDULER_ENABLED, false)) {
-                        v.getContext().startService(new Intent(v.getContext(), SchedulerService.class));
-                    } else {
-                        v.getContext().startService(new Intent(v.getContext(), OverlayService.class));
-                    }
-                }
+                Application.refreshServices(v.getContext());
 
                 Log.d(getClass().toString(), "Setting new color to " + selectedItem.hex);
             }
@@ -155,6 +158,15 @@ public class SettingsFragment extends Fragment {
         } else {
             ((MainActivity) getActivity()).showOrHideSchedulerUI(false);
         }
+    }
+
+    private void refreshUI() {
+        SharedPreferences sp = Prefs.get(getContext());
+
+        final int currentColor = sp.getInt("overlay_color", Color.BLACK);
+
+        final Button bColorPicker = (Button) getView().findViewById(R.id.bColorPicker);
+        bColorPicker.setBackgroundColor(currentColor);
     }
 
     static private class OverlayColor {
@@ -210,7 +222,9 @@ public class SettingsFragment extends Fragment {
             if (convertView == null) {
                 // if it's not recycled, initialize some attributes
                 imageView = new SquareImageView(mContext);
-                imageView.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, GridView.LayoutParams.MATCH_PARENT));
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(GridView.LayoutParams.MATCH_PARENT, GridView.LayoutParams.MATCH_PARENT);
+                lp.setMargins(100, 100, 100, 100);
+                imageView.setLayoutParams(lp);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageView.setPadding(8, 8, 8, 8);
             } else {
@@ -223,17 +237,17 @@ public class SettingsFragment extends Fragment {
             // Show or hide the overlaying "check" icon over
             // the specific color that was selected
             if (position == selectedPosition) {
-                if (android.os.Build.VERSION.SDK_INT < 16) {
-                    imageView.setAlpha(255);
-                } else {
-                    imageView.setImageAlpha(255);
-                }
+//                if (android.os.Build.VERSION.SDK_INT < 16) {
+                imageView.setAlpha(1f);
+//                } else {
+//                    imageView.setImageAlpha(255);
+//                }
             } else {
-                if (android.os.Build.VERSION.SDK_INT < 16) {
-                    imageView.setAlpha(0);
-                } else {
-                    imageView.setImageAlpha(0);
-                }
+//                if (android.os.Build.VERSION.SDK_INT < 16) {
+                imageView.setAlpha(0.7f);
+//                } else {
+//                    imageView.setImageAlpha(0);
+//                }
             }
 
             imageView.setImageResource(R.drawable.ic_check_white_48dp);

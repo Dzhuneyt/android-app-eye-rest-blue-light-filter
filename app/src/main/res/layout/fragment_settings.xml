@@ -1,74 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fragment_background"
-    android:orientation="vertical">
+    android:background="@color/fragment_background">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/llTopLevelWrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <!-- The eye icon that also serves as a "switch" for turning on/off the dimmer -->
-        <ImageView
-            android:id="@+id/ivEnableDisable"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_remove_red_eye_black_48dp" />
 
         <LinearLayout
+            android:id="@+id/llIntensityWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/ivEnableDisable"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical">
 
             <TextView
+                style="@style/Base.TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="0dp"
                 android:text="@string/intensity" />
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Define how strong the overlay filter should be. Higher levels are recommended for night time reading." />
 
             <com.hasmobi.eyerest.custom_views.DiscreeteSeekBar
                 android:id="@+id/sbDarkenIntensity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:dsb_max="100"
+                android:layout_margin="0dp"
+                android:padding="0dp"
+                app:dsb_max="80"
                 app:dsb_min="0" />
         </LinearLayout>
-    </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/bColorPicker"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:background="@color/colorPrimary" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/bColorPicker"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Base.TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/customize_overlay_color" />
+
+                <TextView
+                    style="@style/Base.TextAppearance.AppCompat.Subhead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Select the color that you think is least distracting to your eyes and has enough contrast with the apps, typically visible on the screen." />
+
+            </LinearLayout>
 
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:text="@string/customize_overlay_color" />
-
-    <GridView
-        android:id="@+id/gridColors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:columnWidth="50dp"
-        android:gravity="center"
-        android:horizontalSpacing="15dp"
-        android:numColumns="6"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp" />
+        </RelativeLayout>
 
 
-    <LinearLayout
-        android:id="@+id/llSchedulerContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
-        android:orientation="vertical"/>
-</LinearLayout>
+        <!-- temporarily hidden -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="13dp"
+            android:layout_marginStart="13dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:gravity="left"
+                android:text="@string/customize_overlay_color" />
+
+            <GridView
+                android:id="@+id/gridColors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:columnWidth="10dp"
+                android:gravity="center"
+                android:horizontalSpacing="10dp"
+                android:numColumns="6"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="10dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llSchedulerContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+</ScrollView>
