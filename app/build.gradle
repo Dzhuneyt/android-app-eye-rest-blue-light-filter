@@ -39,12 +39,12 @@ dependencies {
     implementation 'com.wdullaer:materialdatetimepicker:1.5.3'
     implementation 'org.adw.library:discrete-seekbar:1.0.0'
     implementation 'com.intuit.sdp:sdp-android:1.0.2'
-    implementation 'com.google.firebase:firebase-core:16.0.8'
-    implementation 'com.google.firebase:firebase-messaging:17.6.0'
-    implementation "com.google.firebase:firebase-invites:16.1.1"
+    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-messaging:18.0.0'
+    implementation "com.google.firebase:firebase-invites:17.0.0"
     implementation 'com.google.firebase:firebase-crash:16.2.1'
     implementation 'org.jdeferred.v2:jdeferred-core:2.0.0-beta2'
-    implementation 'com.google.firebase:firebase-config:16.5.0'
+    implementation 'com.google.firebase:firebase-config:17.0.0'
     implementation 'com.thebluealliance:spectrum:0.6.0'
     // Color picker library https://github.com/the-blue-alliance/spectrum
     // http://facebook.github.io/shimmer-android/

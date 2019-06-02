@@ -255,12 +255,7 @@ public class SettingsFragment extends Fragment {
             final Bitmap bmp = Bitmap.createBitmap(85, 85, Bitmap.Config.ARGB_8888);
             bmp.eraseColor(color); // fill bitmap
             final BitmapDrawable ob = new BitmapDrawable(mContext.getResources(), bmp);
-
-            if (android.os.Build.VERSION.SDK_INT < 16) {
-                imageView.setBackgroundDrawable(ob);
-            } else {
-                imageView.setBackground(ob);
-            }
+            imageView.setBackground(ob);
 
             return imageView;
         }

@@ -6,9 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.ImageView;
 
-public class OverlayView extends ImageView {
+public class OverlayView extends android.support.v7.widget.AppCompatImageView {
 	private Paint mLoadPaint;
 	private int opacityPercent = 20; // 20% opacity by default
 	private int color = Color.BLACK;
