@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.multidex.MultiDexApplication;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -18,7 +19,7 @@ import com.hasmobi.eyerest.R;
 import com.hasmobi.eyerest.services.OverlayService;
 import com.hasmobi.eyerest.services.SchedulerService;
 
-public class Application extends android.app.Application {
+public class Application extends MultiDexApplication {
 
 	public FirebaseAnalytics analytics;
 

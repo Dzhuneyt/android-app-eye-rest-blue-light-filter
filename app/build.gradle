@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "com.hasmobi.eyerest"
-        minSdkVersion 16
-        targetSdkVersion 28
+        minSdkVersion 19
+        targetSdkVersion 29
         versionCode 2
         versionName "2.0"
         multiDexEnabled true
+        multiDexKeepFile file('multidex-config.txt')
     }
     buildTypes {
         release {
@@ -46,6 +47,7 @@ dependencies {
     implementation 'org.jdeferred.v2:jdeferred-core:2.0.0-beta2'
     implementation 'com.google.firebase:firebase-config:17.0.0'
     implementation 'com.thebluealliance:spectrum:0.6.0'
+    compile 'com.android.support:multidex:1.0.3'
     // Color picker library https://github.com/the-blue-alliance/spectrum
     // http://facebook.github.io/shimmer-android/
 }
