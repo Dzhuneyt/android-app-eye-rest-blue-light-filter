@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.d(getClass().toString(), "onCreate");
+
         ((Application) getApplication()).analytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, new Bundle());
 
         // Google In-App Billing related:
@@ -96,12 +98,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (savedInstanceState == null) {
-            if (!sp.getBoolean(Constants.PREF_EYEREST_ENABLED, false)) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.main, new WelcomeFragment()).commit();
-            } else {
-                getSupportFragmentManager().beginTransaction().replace(R.id.main, new SettingsFragment()).commit();
-            }
+        if (!sp.getBoolean(Constants.PREF_EYEREST_ENABLED, false)) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.main, new WelcomeFragment()).commit();
+        } else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.main, new SettingsFragment()).commit();
         }
     }
 
@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
 
         permissionRequester = new RequestDrawOverAppsPermission(this);
-//        permissionRequester.requestPermissionDrawOverOtherApps();
     }
 
     @Override
@@ -125,7 +124,8 @@ public class MainActivity extends AppCompatActivity
 
                 Snackbar.make(findViewById(android.R.id.content), "Done! It was that easy.", Snackbar.LENGTH_LONG).show();
 
-                getSupportFragmentManager().beginTransaction().replace(R.id.main, new SettingsFragment()).commit();
+                recreate();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.main, new SettingsFragment()).commit();
 
                 ((Application) getApplication()).analytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, new Bundle());
             } else {
