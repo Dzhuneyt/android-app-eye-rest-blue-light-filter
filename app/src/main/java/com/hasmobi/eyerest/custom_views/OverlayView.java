@@ -4,10 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
-public class OverlayView extends android.support.v7.widget.AppCompatImageView {
+public class OverlayView extends androidx.appcompat.widget.AppCompatImageView {
 	private Paint mLoadPaint;
 	private int opacityPercent = 20; // 20% opacity by default
 	private int color = Color.BLACK;

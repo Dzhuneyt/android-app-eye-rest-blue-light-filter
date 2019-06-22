@@ -1,32 +1,26 @@
 package com.hasmobi.eyerest.fragments.main;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hasmobi.eyerest.R;
 import com.hasmobi.eyerest.base.Application;
-import com.hasmobi.eyerest.base.Constants;
 import com.hasmobi.eyerest.base.Prefs;
 import com.hasmobi.eyerest.helpers.IShowHideScheduler;
-import com.hasmobi.eyerest.services.OverlayService;
 import com.hasmobi.eyerest.services.SchedulerService;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;

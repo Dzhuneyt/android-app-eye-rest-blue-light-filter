@@ -3,16 +3,16 @@ package com.hasmobi.eyerest.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.fragment.app.FragmentManager;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,19 +26,12 @@ import com.hasmobi.eyerest.helpers.IShowHideScheduler;
 import com.hasmobi.eyerest.helpers.RequestDrawOverAppsPermission;
 import com.hasmobi.eyerest.services.OverlayService;
 import com.hasmobi.eyerest.base.Prefs;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hasmobi.eyerest.R;
-import com.hasmobi.eyerest.base.Application;
 import com.hasmobi.eyerest.billingutil.IabHelper;
 import com.hasmobi.eyerest.billingutil.IabResult;
-import com.hasmobi.eyerest.billingutil.Inventory;
-import com.hasmobi.eyerest.billingutil.Purchase;
-import com.hasmobi.eyerest.fragments.main.SchedulerDisabledFragment;
 import com.hasmobi.eyerest.fragments.main.SchedulerEnabledFragment;
 import com.hasmobi.eyerest.fragments.main.SettingsFragment;
 import com.hasmobi.eyerest.fragments.main.WelcomeFragment;
-import com.hasmobi.eyerest.helpers.IShowHideScheduler;
-import com.hasmobi.eyerest.services.OverlayService;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IShowHideScheduler {
