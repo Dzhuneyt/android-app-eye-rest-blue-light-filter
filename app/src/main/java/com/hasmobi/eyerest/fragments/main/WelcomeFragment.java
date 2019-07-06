@@ -5,21 +5,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hasmobi.eyerest.R;
 import com.hasmobi.eyerest.base.Application;
 import com.hasmobi.eyerest.base.Constants;
 import com.hasmobi.eyerest.base.Prefs;
+import com.hasmobi.eyerest.fragments.PrivacyPolicyFragment;
 import com.hasmobi.eyerest.helpers.RequestDrawOverAppsPermission;
 import com.hasmobi.eyerest.services.OverlayService;
 
@@ -44,8 +46,7 @@ public class WelcomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        final Button bEnable = view.findViewById(R.id.bEnable);
-        bEnable.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.bEnable).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Context ctx = (getContext() == null ? v.getContext() : getContext());
@@ -86,5 +87,18 @@ public class WelcomeFragment extends Fragment {
                 }
             }
         });
+
+        view.findViewById(R.id.bPrivacyPolicy).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openPrivacyPolicy();
+            }
+        });
+    }
+
+    private void openPrivacyPolicy() {
+        Log.d(getClass().toString(), "Privacy policy open");
+        PrivacyPolicyFragment fPrivacyPolicy = PrivacyPolicyFragment.newInstance();
+        fPrivacyPolicy.show(getActivity().getSupportFragmentManager(), this.getClass().toString());
     }
 }

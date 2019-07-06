@@ -7,10 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import androidx.annotation.ColorInt;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +18,20 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+
 import com.hasmobi.eyerest.R;
 import com.hasmobi.eyerest.activities.MainActivity;
 import com.hasmobi.eyerest.base.Application;
-import com.hasmobi.eyerest.custom_views.DiscreeteSeekBar;
-import com.hasmobi.eyerest.services.SchedulerService;
 import com.hasmobi.eyerest.base.Constants;
 import com.hasmobi.eyerest.base.Prefs;
+import com.hasmobi.eyerest.custom_views.DiscreeteSeekBar;
 import com.hasmobi.eyerest.custom_views.SquareImageView;
+import com.hasmobi.eyerest.fragments.PrivacyPolicyFragment;
+import com.hasmobi.eyerest.services.SchedulerService;
 import com.thebluealliance.spectrum.SpectrumDialog;
 
 import java.util.ArrayList;
@@ -69,7 +71,15 @@ public class SettingsFragment extends Fragment {
             }
         });*/
 
-        final Button bColorPicker = (Button) root.findViewById(R.id.bColorPicker);
+        root.findViewById(R.id.bPrivacyPolicy).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PrivacyPolicyFragment fPrivacyPolicy = PrivacyPolicyFragment.newInstance();
+                fPrivacyPolicy.show(getActivity().getSupportFragmentManager(), this.getClass().toString());
+            }
+        });
+
+        final Button bColorPicker = root.findViewById(R.id.bColorPicker);
         bColorPicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,8 +119,8 @@ public class SettingsFragment extends Fragment {
 
         refreshUI();
 
-        final GridView gridview = (GridView) root.findViewById(R.id.gridColors);
-        final DiscreeteSeekBar sb = (DiscreeteSeekBar) root.findViewById(R.id.sbDarkenIntensity);
+        final GridView gridview = root.findViewById(R.id.gridColors);
+        final DiscreeteSeekBar sb = root.findViewById(R.id.sbDarkenIntensity);
 
         final ColorsAdapter adapter = new ColorsAdapter(getContext());
         gridview.setAdapter(adapter);
@@ -161,7 +171,7 @@ public class SettingsFragment extends Fragment {
 
         final int currentColor = sp.getInt("overlay_color", Color.BLACK);
 
-        final Button bColorPicker = (Button) getView().findViewById(R.id.bColorPicker);
+        final Button bColorPicker = getView().findViewById(R.id.bColorPicker);
         bColorPicker.setBackgroundColor(currentColor);
     }
 

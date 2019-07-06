@@ -13,4 +13,7 @@
     <string name="time_remaining_to_lighten_label">Original brightness will be restored in</string>
     <string name="scheduler_description">Schedule the period when the screen should automatically darken, to reduce eye strain and make it more comfortable to read in dark environments.</string>
     <string name="scheduler">Night mode</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

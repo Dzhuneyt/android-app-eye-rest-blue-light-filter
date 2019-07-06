@@ -48,6 +48,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-config:18.0.0'
     implementation 'com.thebluealliance:spectrum:0.6.0'
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation "io.noties.markwon:core:4.0.1"
     // Color picker library https://github.com/the-blue-alliance/spectrum
     // http://facebook.github.io/shimmer-android/
 }
