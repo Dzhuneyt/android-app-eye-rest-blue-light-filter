@@ -18,4 +18,5 @@ Eye Rest makes it easy to apply a blue light filter that overlays the screen and
     ![App screenshot](https://i.imgur.com/0vYns1H.png)
     
 **Build status:**
+
 [![CircleCI](https://circleci.com/gh/Dzhuneyt/Android-App---Eye-Rest-Blue-Light-Filter.svg?style=svg)](https://circleci.com/gh/Dzhuneyt/Android-App---Eye-Rest-Blue-Light-Filter)
