@@ -5,7 +5,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:alpha="0.4"
         android:contentDescription="Background image"
         android:maxHeight="0dp"
@@ -48,5 +48,16 @@
             android:layout_height="wrap_content"
             android:text="Apply now"
             android:textSize="@dimen/_19sdp" />
+
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/bPrivacyPolicy"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Privacy Policy"
+        android:textSize="@dimen/_12sdp" />
 </RelativeLayout>

@@ -33,8 +33,7 @@
             android:enabled="true" />
         <service
             android:name=".services.SchedulerService"
-            android:enabled="true"
-            android:exported="true" />
+            android:enabled="true" />
 
         <receiver
             android:name=".broadcast_receivers.OnBootBroadcastReceiver"
@@ -51,7 +50,9 @@
             android:name="com.google.android.gms.analytics.globalConfigResource"
             android:resource="@xml/analytics" />
 
-        <service android:name=".services.MyFirebaseMessagingService">
+        <service
+            android:name=".services.MyFirebaseMessagingService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

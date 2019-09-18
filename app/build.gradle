@@ -1,19 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "com.hasmobi.eyerest"
-        minSdkVersion 16
-        targetSdkVersion 28
-        versionCode 2
-        versionName "2.0"
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 3
+        versionName "3.0.0"
         multiDexEnabled true
+        multiDexKeepFile file('multidex-config.txt')
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -29,23 +30,25 @@ repositories {
 
 dependencies {
 //    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:preference-v7:28.0.0'
-    implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'com.android.support:customtabs:28.0.0'
-    implementation 'com.android.support:support-media-compat:28.0.0'
-    implementation 'com.android.support:animated-vector-drawable:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.preference:preference:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.browser:browser:1.0.0'
+    implementation 'androidx.media:media:1.0.1'
+    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.wdullaer:materialdatetimepicker:1.5.3'
     implementation 'org.adw.library:discrete-seekbar:1.0.0'
     implementation 'com.intuit.sdp:sdp-android:1.0.2'
-    implementation 'com.google.firebase:firebase-core:16.0.8'
-    implementation 'com.google.firebase:firebase-messaging:17.6.0'
-    implementation "com.google.firebase:firebase-invites:16.1.1"
+    implementation 'com.google.firebase:firebase-core:17.0.0'
+    implementation 'com.google.firebase:firebase-messaging:19.0.1'
+    implementation "com.google.firebase:firebase-invites:17.0.0"
     implementation 'com.google.firebase:firebase-crash:16.2.1'
     implementation 'org.jdeferred.v2:jdeferred-core:2.0.0-beta2'
-    implementation 'com.google.firebase:firebase-config:16.5.0'
+    implementation 'com.google.firebase:firebase-config:18.0.0'
     implementation 'com.thebluealliance:spectrum:0.6.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation "io.noties.markwon:core:4.0.1"
     // Color picker library https://github.com/the-blue-alliance/spectrum
     // http://facebook.github.io/shimmer-android/
 }
