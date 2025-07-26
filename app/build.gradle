@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.hasmobi.eyerest"
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 34
         versionCode 3
         versionName "3.0.0"
         multiDexEnabled true
@@ -18,39 +18,40 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.hasmobi.eyerest'
 }
 
 repositories {
     maven {
         url "https://jitpack.io"
     }
-    jcenter()
+    google()
+    mavenCentral()
 }
 
 
 dependencies {
 //    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.preference:preference:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.browser:browser:1.0.0'
-    implementation 'androidx.media:media:1.0.1'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.browser:browser:1.4.0'
+    implementation 'androidx.media:media:1.6.0'
+    implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
+    implementation 'com.google.android.material:material:1.6.1'
     implementation 'com.wdullaer:materialdatetimepicker:1.5.3'
     implementation 'org.adw.library:discrete-seekbar:1.0.0'
     implementation 'com.intuit.sdp:sdp-android:1.0.2'
-    implementation 'com.google.firebase:firebase-core:17.0.0'
-    implementation 'com.google.firebase:firebase-messaging:19.0.1'
-    implementation "com.google.firebase:firebase-invites:17.0.0"
-    implementation 'com.google.firebase:firebase-crash:16.2.1'
+    // Temporarily commented out Firebase dependencies for initial build test
+    // implementation 'com.google.firebase:firebase-analytics:21.0.0'
+    // implementation 'com.google.firebase:firebase-messaging:23.0.6'
+    // implementation 'com.google.firebase:firebase-config:21.1.0'
     implementation 'org.jdeferred.v2:jdeferred-core:2.0.0-beta2'
-    implementation 'com.google.firebase:firebase-config:18.0.0'
     implementation 'com.thebluealliance:spectrum:0.6.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation "io.noties.markwon:core:4.0.1"
+    implementation "io.noties.markwon:core:4.6.2"
     // Color picker library https://github.com/the-blue-alliance/spectrum
     // http://facebook.github.io/shimmer-android/
 }
 
-apply plugin: 'com.google.gms.google-services'
+// apply plugin: 'com.google.gms.google-services'
