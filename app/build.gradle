@@ -42,10 +42,11 @@ dependencies {
     implementation 'com.wdullaer:materialdatetimepicker:1.5.3'
     implementation 'org.adw.library:discrete-seekbar:1.0.0'
     implementation 'com.intuit.sdp:sdp-android:1.0.2'
-    // Temporarily commented out Firebase dependencies for initial build test
-    // implementation 'com.google.firebase:firebase-analytics:21.0.0'
-    // implementation 'com.google.firebase:firebase-messaging:23.0.6'
-    // implementation 'com.google.firebase:firebase-config:21.1.0'
+    // Re-enabled core Firebase dependencies (app uses them)
+    implementation 'com.google.firebase:firebase-analytics:21.0.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.6'
+    implementation 'com.google.firebase:firebase-config:21.1.0'
+    // Removed deprecated dependencies: firebase-invites, firebase-crash
     implementation 'org.jdeferred.v2:jdeferred-core:2.0.0-beta2'
     implementation 'com.thebluealliance:spectrum:0.6.0'
     implementation 'androidx.multidex:multidex:2.0.1'
@@ -54,4 +55,4 @@ dependencies {
     // http://facebook.github.io/shimmer-android/
 }
 
-// apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
